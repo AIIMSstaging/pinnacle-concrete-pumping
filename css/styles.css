@@ -85,7 +85,7 @@
     --radius-sm: 0;
     --radius: 0;
     --radius-lg: 0;
-    --container: 1650px;
+    --container: 1200px;
     --header-h: 76px;
     --font-body: 'Roobert', 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     --font-display: 'Invisible', 'Roobert', 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -1424,7 +1424,7 @@ p { margin: 0 0 1em; color: var(--body); }
     grid-template-columns: 1.1fr 1fr;
     gap: 48px;
     align-items: stretch;
-    max-width: 1450px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 .why-grid {
@@ -1535,7 +1535,7 @@ p { margin: 0 0 1em; color: var(--body); }
     padding: 56px 48px;
     border-radius: 6px;
     overflow: hidden;
-    max-width: 1450px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 .stat-num {
@@ -1611,7 +1611,7 @@ p { margin: 0 0 1em; color: var(--body); }
     background: #CA065E;
     border-radius: 6px;
     overflow: hidden;
-    max-width: 1450px;
+    max-width: 1200px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
