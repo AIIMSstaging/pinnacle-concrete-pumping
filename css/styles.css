@@ -105,9 +105,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     position: relative;
-    overflow-x: hidden;
 }
-html { overflow-x: hidden; }
 body::before {
     content: "";
     position: fixed;
@@ -1941,10 +1939,11 @@ p { margin: 0 0 1em; color: var(--body); }
     .primary-nav {
         position: fixed;
         top: 0;
-        right: 0;
+        right: -100vw;
         bottom: 0;
         left: auto;
         width: min(88vw, 380px);
+        max-width: 380px;
         background:
             radial-gradient(ellipse 90% 60% at 50% 110%, rgba(202, 6, 94, 0.45) 0%, transparent 70%),
             linear-gradient(160deg, #14152C 0%, #0A0A14 100%);
@@ -1955,11 +1954,11 @@ p { margin: 0 0 1em; color: var(--body); }
         box-shadow: -20px 0 60px rgba(0, 0, 0, 0.45);
         z-index: 1100;
         overflow-y: auto;
-        transform: translateX(100%);
-        transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+        transition: right .35s cubic-bezier(.4, 0, .2, 1);
         display: flex;
+        visibility: hidden;
     }
-    .primary-nav.open { transform: translateX(0); }
+    .primary-nav.open { right: 0; visibility: visible; }
     .primary-nav::before {
         content: "";
         position: fixed;
