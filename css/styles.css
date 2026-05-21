@@ -2047,24 +2047,36 @@ p { margin: 0 0 1em; color: var(--body); }
         flex-direction: column;
         gap: 14px;
     }
-    .primary-nav-cta .btn {
-        padding: 16px 22px;
+    .primary-nav a.btn {
+        padding: 16px 28px;
         font-size: 1rem;
         border-radius: 10px;
         justify-content: center;
         gap: 10px;
+        border-bottom: 0;
     }
-    .primary-nav-call {
+    .primary-nav a.btn:hover { padding-left: 28px; }
+    .primary-nav a.btn > .material-icons:first-child {
+        color: inherit;
+        background: transparent;
+        width: auto;
+        height: auto;
+        border-radius: 0;
+        font-size: 1.2em;
+        flex-shrink: 0;
+    }
+    a.primary-nav-call {
         display: flex;
         align-items: center;
         gap: 14px;
-        padding: 14px 18px;
+        padding: 14px 18px 14px 24px;
         background: rgba(255, 255, 255, 0.06);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 10px;
         color: #fff;
         transition: background .2s ease;
     }
+    a.primary-nav-call:hover { padding-left: 24px; }
     .primary-nav-call:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
     .primary-nav-call > .material-icons {
         color: var(--brand-pink);
