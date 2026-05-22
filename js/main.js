@@ -5,6 +5,11 @@
 (function () {
     'use strict';
 
+    // ----- Configuration -----
+    var API_BASE = 'https://api.pinnacleconcretepumping.com.au';
+    var RECAPTCHA_SITE_KEY = 'YOUR_RECAPTCHA_SITE_KEY';
+    var THANK_YOU_URL = 'thank-you.html';
+
     // Footer year
     var yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -52,34 +57,117 @@
         });
     }
 
-    // Quote form - basic client-side handling
+    // ----- Form validation helpers -----
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    var phoneRegex = /^[\d\s\+\-\(\)]{6,}$/;
+
+    function setFieldError(field, hasError) {
+        field.style.borderColor = hasError ? '#E91E8C' : '';
+    }
+
+    function validateForm(form) {
+        var valid = true;
+        var fields = form.querySelectorAll('[required]');
+        fields.forEach(function (field) {
+            var value = (field.value || '').trim();
+            var fieldValid = value.length > 0;
+
+            if (fieldValid && field.type === 'email') {
+                fieldValid = emailRegex.test(value);
+            }
+            if (fieldValid && field.type === 'tel') {
+                fieldValid = phoneRegex.test(value);
+            }
+
+            setFieldError(field, !fieldValid);
+            if (!fieldValid) valid = false;
+        });
+        return valid;
+    }
+
+    // ----- reCAPTCHA token -----
+    function getRecaptchaToken(action) {
+        return new Promise(function (resolve, reject) {
+            if (typeof grecaptcha === 'undefined') {
+                reject(new Error('reCAPTCHA not loaded'));
+                return;
+            }
+            grecaptcha.ready(function () {
+                grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action })
+                    .then(resolve)
+                    .catch(reject);
+            });
+        });
+    }
+
+    // ----- Generic submitter -----
+    function submitForm(form, endpoint, action, btnLoadingText) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (!btn) return;
+        var originalHtml = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = btnLoadingText || 'Sending…';
+
+        getRecaptchaToken(action)
+            .then(function (token) {
+                var formData = new FormData(form);
+                formData.append('recaptcha_token', token);
+
+                return fetch(API_BASE + endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+            })
+            .then(function (response) {
+                return response.json().then(function (data) {
+                    return { ok: response.ok, data: data };
+                });
+            })
+            .then(function (result) {
+                if (result.ok && result.data && result.data.success) {
+                    window.location.href = THANK_YOU_URL;
+                } else {
+                    var msg = (result.data && result.data.message) ? result.data.message : 'Something went wrong. Please try again or call us.';
+                    alert(msg);
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            })
+            .catch(function () {
+                alert('Network error. Please try again or call 1300 688 390.');
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            });
+    }
+
+    // ----- Quote form (large form) -> form-quote.php -----
     var quoteForm = document.getElementById('quoteForm');
     if (quoteForm) {
         quoteForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            var required = quoteForm.querySelectorAll('[required]');
-            var valid = true;
-            required.forEach(function (field) {
-                if (!field.value.trim()) {
-                    field.style.borderColor = '#E91E8C';
-                    valid = false;
-                } else {
-                    field.style.borderColor = '';
-                }
-            });
-            if (!valid) return;
+            if (!validateForm(quoteForm)) return;
+            submitForm(
+                quoteForm,
+                '/form-quote.php',
+                'quote_form',
+                '<span class="material-icons">hourglass_top</span>Sending…'
+            );
+        });
+    }
 
-            var btn = quoteForm.querySelector('button[type="submit"]');
-            if (btn) {
-                var original = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<span class="material-icons">check_circle</span>Thanks! We\'ll be in touch shortly.';
-                quoteForm.reset();
-                setTimeout(function () {
-                    btn.disabled = false;
-                    btn.innerHTML = original;
-                }, 4500);
-            }
+    // ----- Mini form (simple) -> form.php -----
+    var miniForm = document.getElementById('miniForm');
+    if (miniForm) {
+        miniForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!validateForm(miniForm)) return;
+            submitForm(
+                miniForm,
+                '/form.php',
+                'mini_form',
+                'Sending…'
+            );
         });
     }
 
