@@ -241,7 +241,7 @@
                     </label>
                     <label>
                         <span>Phone</span>
-                        <input type="tel" name="phone" required placeholder="1300 688 390">
+                        <input type="tel" name="phone" required placeholder="1300 688 390" autocomplete="off" maxlength="10" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" pattern="^(04|02|03|07|08)[0-9]{8}$" title="Please enter a valid phone number.">
                     </label>
                 </div>
                 <label>
@@ -562,7 +562,7 @@
             </div>
             <form class="mini-form" id="miniForm" novalidate>
                 <input type="text" name="name" placeholder="Full Name" required />
-                <input type="tel" name="phone" placeholder="Phone" required />
+                <input type="tel" name="phone" placeholder="Phone" required autocomplete="off" maxlength="10" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" pattern="^(04|02|03|07|08)[0-9]{8}$" title="Please enter a valid phone number." />
                 <input type="email" name="email" placeholder="Email" required />
                 <button type="submit" class="btn btn-primary">Get My Quote</button>
             </form>
