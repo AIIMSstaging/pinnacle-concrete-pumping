@@ -13,8 +13,13 @@
     var header = document.getElementById('siteHeader');
     var onScroll = function () {
         if (!header) return;
-        if (window.scrollY > 12) header.classList.add('scrolled');
-        else header.classList.remove('scrolled');
+        if (window.scrollY > 12) {
+            header.classList.add('scrolled');
+            document.body.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+            document.body.classList.remove('scrolled');
+        }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
